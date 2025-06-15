@@ -83,7 +83,7 @@ app.delete("/goals/:id", async (req, res) => {
   }
 });
 
-const MONGODB_INITDB_ROOT_USERNAME = process.env.MONGODB_INITDB_ROOT_USERNAME;
+const MONGO_INITDB_ROOT_USERNAME = process.env.MONGODB_INITDB_ROOT_USERNAME;
 const MONGO_INITDB_ROOT_PASSWORD = process.env.MONGO_INITDB_ROOT_PASSWORD;
 const MONGODB_DATABASE = process.env.MONGODB_DATABASE;
 
