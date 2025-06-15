@@ -1,0 +1,23 @@
+# Ignore environment files
+backend/.env
+
+# Node modules
+**/node_modules/
+
+# Log files
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
+
+# VS Code config
+.vscode/
+
+# Docker files
+**/tmp/
+**/.docker/
+
+# Build artifacts (if any)
+dist/
+build/
