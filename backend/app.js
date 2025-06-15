@@ -1,3 +1,5 @@
+require("dotenv").config(); // Loads .env
+
 const fs = require("fs");
 const path = require("path");
 
@@ -90,19 +92,24 @@ const MONGODB_DATABASE = process.env.MONGODB_DATABASE;
 // Construct the MongoDB connection string
 const MONGODB_URL = `mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:27017/${MONGODB_DATABASE}`;
 
-mongoose.connect(
-  MONGODB_URL,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  },
-  (err) => {
-    if (err) {
-      console.error("FAILED TO CONNECT TO MONGODB");
-      console.error(err);
-    } else {
-      console.log("CONNECTED TO MONGODB");
-      app.listen(80);
-    }
+const PORT = process.env.APP_PORT || 80;
+
+const startServer = async () => {
+  try {
+    await mongoose.connect(MONGODB_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("CONNECTED TO MONGODB");
+
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("FAILED TO CONNECT TO MONGODB");
+    console.error(err);
+    process.exit(1); // Exit on DB connection failure
   }
-);
+};
+
+startServer();
