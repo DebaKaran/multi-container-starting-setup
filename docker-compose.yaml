@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  mongodb:
+    image: "mongo:8.0.10"
+    volumes:
+      - mongo-data:/data/db
+    env_file:
+      - ./backend/.env
+  backend:
+    # build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - 8070:8070
+    volumes:
+      - logs:/app/logs
+      - ./backend:/app #relative path
+      - /app/node_modules
+    depends_on:
+      - mongodb
+  # frontend:
+volumes:
+  mongo-data:
+  logs:

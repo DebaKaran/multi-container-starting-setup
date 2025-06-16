@@ -108,3 +108,28 @@ docker run --name goals-frontend --rm -d -it -p 3000:3000 -v "/run/desktop/mnt/h
 A: -v /local/src:/app/src: Ensures local code changes are reflected immediately in the container.
 
 B: -v /app/node_modules: Prevents the container’s node_modules from being overwritten by an empty local directory.
+
+-- docker-compose.yaml file
+
+1: The MongoDB container loads its credentials from a .env file located at ./backend/.env.
+Sample .env file:
+
+2: To start the containers: docker-compose up --build -d
+
+3: To stop and remove the containers: docker-compose down
+
+4: Volumes:
+
+A: ./backend:/app: Mounts your local backend code inside the container so code changes are reflected live.
+
+B: /app/node_modules: Prevents overwriting container-installed node_modules with your empty local folder.
+
+C: logs:/app/logs: Persists backend logs separately in a named Docker volume.
+
+D: mongo-data:/data/db: Persists MongoDB data across container restarts.
+
+-- Container Names
+
+By default, Docker Compose generates container names using this format:
+
+<project-directory-name>\_<service-name>\_1
