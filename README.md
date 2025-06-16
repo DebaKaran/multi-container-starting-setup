@@ -98,3 +98,13 @@ docker run --name goals-backend \
 
 Replace:
 /absolute/path/to/your/local/backend with your actual project path on your system (e.g., /run/desktop/mnt/host/c/Users/your-name/project/backend on Windows+WSL).
+
+-- Live Reload for React (Frontend) in Docker
+
+To enable live reload while developing React inside Docker, we use bind mounts:
+
+docker run --name goals-frontend --rm -d -it -p 3000:3000 -v "/run/desktop/mnt/host/c/Users/your-name/project/frontend/src:/app/src" -v /app/node_modules goals-react
+
+A: -v /local/src:/app/src: Ensures local code changes are reflected immediately in the container.
+
+B: -v /app/node_modules: Prevents the container’s node_modules from being overwritten by an empty local directory.
