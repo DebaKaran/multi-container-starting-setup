@@ -2,11 +2,13 @@ version: "3.8"
 services:
   mongodb:
     image: "mongo:8.0.10"
+    container_name: mongodb
     volumes:
       - mongo-data:/data/db
     env_file:
       - ./backend/.env
   backend:
+    container_name: goals-backend
     # build: ./backend
     build:
       context: ./backend
@@ -15,11 +17,12 @@ services:
       - 8070:8070
     volumes:
       - logs:/app/logs
-      - ./backend:/app #relative path
-      - /app/node_modules
+      - ./backend:/app #relative path - Mount source code for development
+      - /app/node_modules # Prevent overwrite of node_modules
     depends_on:
       - mongodb
   frontend:
+    container_name: goals-frontend
     # build: ./backend
     build:
       context: ./frontend
@@ -27,7 +30,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./frontend/src:/app/src #relative path
+      - ./frontend/src:/app/src #relative path - Enable live reload
       - /app/node_modules
     stdin_open: true
     tty: true
