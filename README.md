@@ -35,3 +35,7 @@ docker build -t goals-react .
 B. Run Frontend Container:
 
 docker run --name goals-frontend --rm -d -it -p 3000:3000 --network goals-network goals-react
+
+- Now update the backend container with volumes
+
+docker run --name goals-backend --rm -d -p 8070:8070 --network goals-network -v logs:/app/logs -v "$(pwd)/backend:/app" -v /app/node_modules goals-node
