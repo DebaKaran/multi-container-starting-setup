@@ -1,3 +1,28 @@
+A full-stack app using MongoDB, Express, and React, containerized using Docker Compose. Includes a seed service to preload sample data into the databas
+
+Tech Stack:
+
+1: Frontend: React (Vite or CRA)
+
+2: Backend: Node.js, Express, Mongoose
+
+3: Database: MongoDB (Dockerized)
+
+4: Containerization: Docker, Docker Compose
+
+Project Structure:
+
+.
+├── backend
+│ ├── models
+│ ├── logs
+│ ├── app.js
+│ └── .env
+├── frontend
+│ └── src
+├── docker-compose.yaml
+├── README.md
+
 # multi-container-starting-setup
 
 multi-container-starting-setup
@@ -149,3 +174,39 @@ These settings are necessary for React’s development server to run properly in
 C: depends_on:
 
 Ensures the backend container is up and running before starting the frontend, which may depend on it for API requests.
+
+------------- INCLUDING SEED CONTAINER -----------------
+
+Now Project Structure:
+
+├── backend
+│ ├── models
+│ ├── util
+│ ├── logs
+│ ├── app.js
+│ ├── seed.js
+│ └── .env
+├── frontend
+│ └── src
+├── docker-compose.yaml
+├── README.md
+
+Build and run the containers: docker-compose up --build
+
+Seed the database (run once): docker-compose run --rm seed
+
+Application URLs
+
+1: Frontend: http://localhost:3000
+
+2: Backend API: http://localhost:8070/goals
+
+API Endpoints:
+
+1: GET /goals – Fetch all goals
+
+2: POST /goals – Add new goal ({ text: "some goal" })
+
+3: DELETE /goals/:id – Delete goal by ID
+
+The seed service reuses the backend container and uses seed.js to populate MongoDB.
