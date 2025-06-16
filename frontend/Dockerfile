@@ -5,7 +5,7 @@ FROM node:20
 WORKDIR /app
 
 # Set a default environment variable for port
-ENV APP_PORT=8070
+ENV APP_PORT=3000
 
 # Copy package.json and install dependencies
 COPY package.json .
@@ -19,4 +19,4 @@ COPY . .
 EXPOSE ${APP_PORT}
 
 # Start the app using the environment-defined port
-CMD [ "node", "app.js" ]
+CMD [ "npm", "start" ]
