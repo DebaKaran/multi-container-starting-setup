@@ -133,3 +133,19 @@ D: mongo-data:/data/db: Persists MongoDB data across container restarts.
 By default, Docker Compose generates container names using this format:
 
 <project-directory-name>\_<service-name>\_1
+
+-- frontend
+
+A: volumes:
+
+A1: ./frontend/src:/app/src: Enables live reloading of React code.
+
+A2: /app/node_modules: Prevents local empty node_modules from overwriting container dependencies.
+
+B: stdin_open: true and tty: true:
+
+These settings are necessary for React’s development server to run properly inside the container in interactive/watch mode.
+
+C: depends_on:
+
+Ensures the backend container is up and running before starting the frontend, which may depend on it for API requests.
