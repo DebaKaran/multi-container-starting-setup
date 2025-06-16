@@ -86,16 +86,6 @@ app.delete("/goals/:id", async (req, res) => {
   }
 });
 
-// const MONGO_INITDB_ROOT_USERNAME = process.env.MONGO_INITDB_ROOT_USERNAME;
-// const MONGO_INITDB_ROOT_PASSWORD = process.env.MONGO_INITDB_ROOT_PASSWORD;
-// const MONGODB_DATABASE = process.env.MONGODB_DATABASE;
-
-// Construct the MongoDB connection string
-//const MONGODB_URL = `mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:27017/${MONGODB_DATABASE}`;
-
-//const MONGODB_URL = `mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:27017/${MONGODB_DATABASE}?authSource=admin`;
-
-// const MONGODB_URL = process.env.MONGODB_URL
 
 const PORT = process.env.APP_PORT || 80;
 
