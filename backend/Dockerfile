@@ -19,4 +19,4 @@ COPY . .
 EXPOSE ${APP_PORT}
 
 # Start the app using the environment-defined port
-CMD [ "node", "app.js" ]
+CMD [ "npm", "start" ]
