@@ -36,6 +36,16 @@ services:
     tty: true
     depends_on:
       - backend
+  seed:
+    container_name: seed-runner
+    build:
+      context: ./backend
+      dockerfile: Dockerfile # Reusing backend image to run seeding script
+    depends_on:
+      - mongodb
+    env_file:
+      - ./backend/.env
+    command: ["node", "seed.js"] # Runs the seeding script
 volumes:
   mongo-data:
   logs:
