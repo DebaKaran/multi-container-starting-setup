@@ -234,3 +234,48 @@ Copies /app/build → /usr/share/nginx/html
 Serves static files via Nginx on port 80
 
 ### No multi-stage is required for backend application
+
+## 📦 Docker Setup — Two Dockerfiles Approach
+
+This project uses **two separate Dockerfiles** to support both development and production environments:
+
+### 🚀 Development — Dockerfile.dev
+
+- File: `Dockerfile.dev`
+- Runs NodeJS container with React dev server (`npm start`)
+- Supports live reload (via volumes)
+- Used by `docker-compose.override.yaml`
+
+To run in development:
+
+```bash
+docker-compose up --build
+
+Result:
+
+1: React app runs on http://localhost:3000
+
+2: Live reload works — edit /src and browser updates automatically
+
+Production — Dockerfile (multi-stage):
+
+File: Dockerfile
+
+Multi-stage build:
+
+Stage 1 → NodeJS → npm run build → /app/build
+
+Stage 2 → NGINX → serves static files from /usr/share/nginx/html
+
+Small, optimized container for production ( Approximately 75 MB)
+
+To run in production:
+```
+
+docker-compose -f docker-compose.yaml up --build -d
+
+Result:
+
+A: React app runs on NGINX on port 3000:80
+
+B: No node_modules, no source code inside container — optimized image (~70 MB)
