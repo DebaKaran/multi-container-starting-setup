@@ -210,3 +210,27 @@ API Endpoints:
 3: DELETE /goals/:id – Delete goal by ID
 
 The seed service reuses the backend container and uses seed.js to populate MongoDB.
+
+### Multi-stage docker build
+
+Frontend Docker Build (Multi-Stage):
+
+The frontend React app is built using a multi-stage Dockerfile:
+
+1: Stage 1:
+
+Uses node:20 image
+
+Runs npm install
+
+Runs npm run build → creates static optimized React files in /app/build
+
+2️: Stage 2:
+
+Uses lightweight nginx:stable-alpine image
+
+Copies /app/build → /usr/share/nginx/html
+
+Serves static files via Nginx on port 80
+
+### No multi-stage is required for backend application
