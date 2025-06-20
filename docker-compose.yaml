@@ -17,23 +17,15 @@ services:
       - 8070:8070
     volumes:
       - logs:/app/logs
-      - ./backend:/app #relative path - Mount source code for development
-      - /app/node_modules # Prevent overwrite of node_modules
     depends_on:
       - mongodb
   frontend:
     container_name: goals-frontend
-    # build: ./backend
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
       - 3000:80
-    volumes:
-      - ./frontend/src:/app/src #relative path - Enable live reload
-      - /app/node_modules
-    stdin_open: true
-    tty: true
     depends_on:
       - backend
   seed:
