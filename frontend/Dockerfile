@@ -1,4 +1,23 @@
 # Use latest Node 20 base image
+FROM node:20 AS dev
+
+# Set working directory inside container
+WORKDIR /app
+
+# Copy package.json and install dependencies
+COPY package.json .
+
+RUN npm install
+
+# Copy rest of the application files
+COPY . .
+
+# In dev we want "npm start"
+CMD ["npm", "start"]
+
+# Prod stage
+
+# Use latest Node 20 base image
 FROM node:20 AS frontend-react
 
 # Set working directory inside container
