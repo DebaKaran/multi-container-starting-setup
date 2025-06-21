@@ -34,3 +34,6 @@ docker-compose\*.yaml
 
 .DS_Store
 Thumbs.db
+
+../run-dev.ps1
+../run-prod.ps1
