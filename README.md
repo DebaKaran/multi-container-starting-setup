@@ -470,3 +470,26 @@ How We Fixed It
 
 3: We rebuilt fresh: Now MongoDB creates the correct root user, and authentication succeeds.
 Backend and seed containers now connect successfully.
+
+#### Run Scripts for Development & Production
+
+This project includes two PowerShell scripts for convenience:
+
+Script Purpose
+run-dev.ps1 Run in development mode (hot reload, port 3001)
+run-prod.ps1 Run in production mode (frontend via nginx, port 3000 → 80)
+
+Usage:
+
+# For development mode (Vite dev server on port 3001)
+
+.\run-dev.ps1
+
+# For production mode (nginx reverse-proxy to frontend on port 3000)
+
+.\run-prod.ps1
+
+Notes:
+These scripts are not copied into Docker images (.dockerignore) because they are only used locally for running docker-compose.
+
+The scripts are versioned in git because they are helpful for any developer working on this project.
