@@ -22,7 +22,9 @@ services:
     depends_on:
       - mongodb
     env_file:
-      - .env
+      - .env # For MONGO_*
+      - ./backend/env/.env.backend # For APP_PORT
+    restart: on-failure
   frontend:
     container_name: goals-frontend
     build:
@@ -40,7 +42,7 @@ services:
     depends_on:
       - mongodb
     env_file:
-      - .env
+      - .env # For MONGO_*
     command: ["node", "seed.js"] # Runs the seeding script
 volumes:
   mongo-data:
