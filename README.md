@@ -398,3 +398,75 @@ MongoDB initializes correctly
 Backend connects successfully
 
 Images are smaller, builds are faster
+
+### Migrating Environment Variables from Dockerfile to .env File
+
+Context
+In the initial version of this project, environment variables (such as APP_PORT) were hardcoded in the Dockerfile using:
+
+# Example:
+
+ENV APP_PORT=8070
+
+MongoDB variables were also being passed inconsistently across containers — sometimes hardcoded, sometimes from .env, sometimes missing in compose.
+
+What We Changed
+We migrated all runtime environment variables (MongoDB credentials, backend port) into .env files.
+Now:
+
+1: ✅ The main .env in project root holds:
+
+MONGO_INITDB_ROOT_USERNAME=root
+MONGO_INITDB_ROOT_PASSWORD=\***\*\*\*\*\***
+MONGO_INITDB_DATABASE=course-goals
+
+2: ✅ The backend also uses:
+
+APP_PORT=8070
+
+via:
+
+env_file:
+
+- .env
+- ./backend/env/.env.backend
+
+✅ The Dockerfile no longer sets ENV APP_PORT=8070.
+Instead, the container gets this value at runtime from .env.backend.
+
+✅ The compose mongodb service now uses:
+
+environment:
+MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+
+Why We Made This Change
+1: Easier to manage environment variables in .env instead of inside Dockerfiles.
+2: No need to rebuild Docker images when changing environment variables.
+3: Clear separation of configuration (in .env) vs image build (in Dockerfile).
+4: Supports multiple environments (development, production)
+
+Issue We Faced
+1: Authentication Failed
+
+We kept seeing this error:
+codeName: 'AuthenticationFailed'
+nodemon app crashed
+
+Root Cause
+
+MongoDB creates the root user only once when the volume /data/db is first initialized.
+
+If the .env file was incorrect during first run (wrong vars or not passed),
+
+the persistent mongo-data volume stored the old, invalid user (or no user)
+
+Later, even after fixing .env, the app kept failing because the old data remained in the volume!
+
+How We Fixed It
+1️: We ensured all services properly consumed .env (no mixing of ENV and env_file).
+2️: We removed the old volume: docker-compose down -v
+
+3: We rebuilt fresh: Now MongoDB creates the correct root user, and authentication succeeds.
+Backend and seed containers now connect successfully.
