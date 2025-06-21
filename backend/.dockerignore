@@ -1,0 +1,26 @@
+# Node dependencies
+node_modules
+
+# Git files
+.git
+.gitignore
+
+# Logs
+*.log
+
+# Docker files
+Dockerfile*
+docker-compose*.yml
+
+# Env files (optional — if you want to inject via environment instead)
+#Recommended to include it in this file
+.env
+.env.*
+
+# IDE/editor settings
+.vscode
+.idea
+
+# OS metadata
+.DS_Store
+Thumbs.db
