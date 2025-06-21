@@ -279,3 +279,37 @@ Result:
 A: React app runs on NGINX on port 3000:80
 
 B: No node_modules, no source code inside container — optimized image (~70 MB)
+
+---
+
+## Frontend Dockerfile — Multi-stage
+
+The **frontend** uses a single `Dockerfile` with named stages:
+
+```dockerfile
+FROM node:20 AS dev          # Development stage (React Dev Server)
+FROM node:20 AS frontend-react  # Production build stage (npm run build)
+FROM nginx:stable-alpine     # Final nginx image (serving static build)
+
+The target stage is controlled with: target: ${BUILD_TARGET:-dev}
+(in docker-compose.override.yaml)
+
+Power Shell:
+$env:BUILD_TARGET="frontend-react"
+$env:PORT = "3000"
+docker-compose -f docker-compose.yaml up --build
+
+BUILD_TARGET=frontend-react docker-compose -f docker-compose.yaml up --build
+
+Developement:
+
+$env:BUILD_TARGET="dev"
+$env:PORT = "3001"
+docker-compose up --build
+
+or:
+
+BUILD_TARGET=dev docker-compose up --build
+
+or docker-compose up --build ( Dev is implicit)
+```

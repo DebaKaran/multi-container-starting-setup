@@ -1,17 +1,13 @@
 version: "3.8"
 
 services:
-  backend:
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
-
   frontend:
     build:
       context: /frontend
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
+      target: ${BUILD_TARGET:-dev}
     ports:
-      - 3000:3000
+      - ${PORT:-3000}:3000
     volumes:
       - ./frontend/src:/app/src
       - /app/node_modules
