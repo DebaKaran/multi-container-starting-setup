@@ -316,3 +316,85 @@ or docker-compose up --build ( Dev is implicit)
 
 Using node:20-slim for both Frotend and Backend, the image size improved by 75%
 
+### Adding .dockerignore for Frontend and Backend
+
+1️: Why we added .dockerignore files?
+
+A: To avoid copying unnecessary files (like node_modules, .git, local .env, log files) into the Docker build context.
+
+B: Reduces Docker image size.
+
+C: Speeds up build time.
+
+D: Prevents potential security issues (you don’t accidentally copy secrets into the container).
+
+We added separate .dockerignore files inside:
+
+/frontend/.dockerignore
+/backend/.dockerignore
+
+2️: What issue we faced?
+
+The backend container was failing to connect to MongoDB due to AuthenticationFailed.
+
+The error in logs showed:
+
+MongoError: Authentication failed.
+user: undefined
+
+Cause:
+
+A: .env file was not correctly passed inside the MongoDB container.
+B: Backend was configured correctly — but failed because MongoDB was misconfigured.
+
+The MongoDB container (mongo:8.0.10) requires:
+
+-> MONGO_INITDB_ROOT_USERNAME
+
+-> MONGO_INITDB_ROOT_PASSWORD
+
+-> MONGO_INITDB_DATABASE
+
+Initially, we used:
+
+env_file:
+
+- .env
+
+This is not sufficient for the official mongo image, which expects environment: variables directly (not via env_file).
+
+As a result, MongoDB was started without credentials → no user created → backend’s connection string failed → authentication error.
+
+3️: How we resolved it?
+
+For MongoDB container — switched to:
+
+mongodb:
+image: "mongo:8.0.10"
+container_name: mongodb
+environment:
+MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+MONGO_INITDB_DATABASE: ${MONGO_DB}
+volumes: - mongo-data:/data/db
+
+B: For backend container:
+
+backend:
+env_file: - .env
+
+C: Added proper .dockerignore:
+
+node*modules
+.git
+.env
+*.log
+Dockerfile\_
+
+Now:
+
+MongoDB initializes correctly
+
+Backend connects successfully
+
+Images are smaller, builds are faster

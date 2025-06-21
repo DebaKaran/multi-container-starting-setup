@@ -5,8 +5,10 @@ services:
     container_name: mongodb
     volumes:
       - mongo-data:/data/db #Official MongoDB: /data/db
-    env_file:
-      - ./backend/.env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
   backend:
     container_name: goals-backend
     # build: ./backend
@@ -19,6 +21,8 @@ services:
       - logs:/app/logs
     depends_on:
       - mongodb
+    env_file:
+      - .env
   frontend:
     container_name: goals-frontend
     build:
@@ -36,7 +40,7 @@ services:
     depends_on:
       - mongodb
     env_file:
-      - ./backend/.env
+      - .env
     command: ["node", "seed.js"] # Runs the seeding script
 volumes:
   mongo-data:

@@ -20,6 +20,11 @@ docker-compose\*.yaml
 
 \*.log
 
+# Env files (optional — if you want to inject via environment instead)
+#Recommended to include it in this file
+.env
+.env.*
+
 # IDE/editor settings
 
 .vscode
