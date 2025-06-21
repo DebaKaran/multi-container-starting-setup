@@ -1,0 +1,31 @@
+# Don't copy dependencies
+
+node_modules
+
+# Git files
+
+.git
+.gitignore
+
+# Build output (if exists locally)
+
+build
+
+# Docker files
+
+Dockerfile\*
+docker-compose\*.yaml
+
+# Logs
+
+\*.log
+
+# IDE/editor settings
+
+.vscode
+.idea
+
+# OS metadata
+
+.DS_Store
+Thumbs.db
