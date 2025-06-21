@@ -1,5 +1,5 @@
 # Use latest Node 20 base image
-FROM node:20 AS dev
+FROM node:20-slim AS dev
 
 # Set working directory inside container
 WORKDIR /app
@@ -18,7 +18,7 @@ CMD ["npm", "start"]
 # Prod stage
 
 # Use latest Node 20 base image
-FROM node:20 AS frontend-react
+FROM node:20-slim AS frontend-react
 
 # Set working directory inside container
 WORKDIR /app

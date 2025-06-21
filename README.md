@@ -313,3 +313,5 @@ BUILD_TARGET=dev docker-compose up --build
 
 or docker-compose up --build ( Dev is implicit)
 ```
+
+Using node:20-slim for both Frotend and Backend, the image size improved by 75%
