@@ -495,5 +495,3 @@ These scripts are not copied into Docker images (.dockerignore) because they are
 The scripts are versioned in git because they are helpful for any developer working on this project.
 
 ### Added Inital Jenkins File
-
-### Will remove it later
