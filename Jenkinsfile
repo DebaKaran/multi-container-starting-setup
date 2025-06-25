@@ -4,7 +4,7 @@ pipeline {
   }
 
   environment {
-    COMPOSE_CMD = "docker-compose -f docker-compose.yml -f docker-compose.override.yml"
+    COMPOSE_CMD = "docker-compose -f docker-compose.yaml -f docker-compose.override.yaml"
   }
 
   stages {
