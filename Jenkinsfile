@@ -16,13 +16,19 @@ pipeline {
 
     stage('Build & Run Containers') {
       steps {
-        sh "${COMPOSE_CMD} up -d --build"
+        dir("${env.WORKSPACE}") {
+          sh "pwd && ls -la"
+          sh "${COMPOSE_CMD} up -d --build"
+        }
       }
     }
 
     stage('Verify Running Containers') {
       steps {
-        sh "docker ps"
+        dir("${env.WORKSPACE}") {
+          sh "docker ps"
+        }
+        
       }
     }
   }
