@@ -495,3 +495,11 @@ These scripts are not copied into Docker images (.dockerignore) because they are
 The scripts are versioned in git because they are helpful for any developer working on this project.
 
 ### Added Inital Jenkins File
+
+### unable to prepare context: path "/frontend" not found
+
+This typically occurs when the context in your docker-compose.override.yaml is set to an absolute path (/frontend) instead of a relative path (./frontend).
+
+Update your docker-compose.override.yaml:
+
+context: ./frontend
