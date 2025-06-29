@@ -9,4 +9,4 @@ docker-compose -f docker-compose.yaml down
 export BUILD_TARGET=frontend-react
 
 # Start and build containers using just the main compose file
-docker-compose -f docker-compose.yaml up --build
+docker-compose -f docker-compose.yaml up -d --build
