@@ -532,9 +532,8 @@ docker-compose -f docker-compose.yaml -f docker-compose.override.yaml up --build
 In your docker-compose.yaml:
 
 services:
-  frontend:
-    ports:
-      - "${DEV_PORT:-3000}:3000"
+frontend:
+ports: - "${DEV_PORT:-3000}:3000"
 
 This maps host port 3001 to container port 3000 when DEV_PORT is set.
 
@@ -556,12 +555,15 @@ run-prod.sh:
 echo "Running Prod Mode (nginx on port 3000 → 80) ..."
 
 # Stop and remove existing containers
+
 docker-compose -f docker-compose.yaml down
 
 # Set environment variable for production target
+
 export BUILD_TARGET=frontend-react
 
 # Start and build containers using just the main compose file
+
 docker-compose -f docker-compose.yaml up --build
 
 Jenkins Integration Tip:
@@ -569,21 +571,21 @@ Jenkins Integration Tip:
 If you’re using Jenkins, you can invoke the script inside your pipeline:
 
 stage('Build & Run Containers') {
-  steps {
-    dir("${env.WORKSPACE}") {
-      sh 'chmod +x run-dev.sh'
-      sh './run-dev.sh'
-    }
-  }
+steps {
+dir("${env.WORKSPACE}") {
+sh 'chmod +x run-dev.sh'
+sh './run-dev.sh'
+}
+}
 }
 
 ###added run-prod.sh for CI-safe production build
 
- Docker build fails with:
+Docker build fails with:
 
- Could not find a required file.
-  Name: index.js
-  Searched in: /app/src
+Could not find a required file.
+Name: index.js
+Searched in: /app/src
 
 Even though the file existed in your local project, the frontend/src/index.js was not available inside the Docker container.
 
@@ -602,8 +604,9 @@ Likely Culprit: Volume Override in Dev Mode
 Your docker-compose.override.yaml contains:
 
 volumes:
-  - ./frontend/src:/app/src
-  - /app/node_modules
+
+- ./frontend/src:/app/src
+- /app/node_modules
 
 This binds your local ./frontend/src over the container's /app/src.
 
@@ -614,8 +617,9 @@ Solution: Remove the volumes block during Jenkins/dev build
 Volumes like:
 
 volumes:
-  - ./frontend/src:/app/src
-  - /app/node_modules
+
+- ./frontend/src:/app/src
+- /app/node_modules
 
 Should be used only during local dev, not CI.
 
@@ -626,12 +630,15 @@ So instead of run-dev.sh, run-prod.sh file:
 echo "Running Prod Mode (nginx on port 3000 → 80) ..."
 
 # Stop and remove existing containers
+
 docker-compose -f docker-compose.yaml down
 
 # Set environment variable for production target
+
 export BUILD_TARGET=frontend-react
 
 # Start and build containers using just the main compose file
+
 docker-compose -f docker-compose.yaml up --build
 
 And Jenkinsfile Integration:
@@ -639,15 +646,15 @@ And Jenkinsfile Integration:
 Use one or the other:
 
 stage('Build & Run Containers') {
-  steps {
-    dir("${env.WORKSPACE}") {
-      sh 'chmod +x run-prod.sh'
-      sh './run-prod.sh'
-    }
-  }
+steps {
+dir("${env.WORKSPACE}") {
+sh 'chmod +x run-prod.sh'
+sh './run-prod.sh'
+}
+}
 }
 
 1: For local development, keep using run-dev.sh.
 2: In Jenkins/CI, always prefer run-prod.sh.
 
-
+### Comments
