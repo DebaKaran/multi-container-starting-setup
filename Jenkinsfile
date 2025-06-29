@@ -18,6 +18,8 @@ pipeline {
       steps {
         dir("${env.WORKSPACE}") {
           sh "pwd && ls -la"
+          sh "ls -la ./frontend"
+          sh "ls -la ./backend"
           sh "${COMPOSE_CMD} up -d --build"
         }
       }
