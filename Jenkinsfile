@@ -23,8 +23,8 @@ pipeline {
     stage('Build & Run Containers') {
       steps {
         dir("${env.WORKSPACE}") {
-         sh 'chmod +x run-dev.sh'
-         sh './run-dev.sh'
+         sh 'chmod +x run-prod.sh'
+         sh './run-prod.sh'
         }
       }
     }
