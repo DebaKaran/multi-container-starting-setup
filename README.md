@@ -503,3 +503,150 @@ This typically occurs when the context in your docker-compose.override.yaml is s
 Update your docker-compose.override.yaml:
 
 context: ./frontend
+
+### Bind for 0.0.0.0:3000 failed: port is already allocated
+
+When running the frontend container, you might see this error:
+
+Bind for 0.0.0.0:3000 failed: port is already allocated
+
+This means another process or container is already using host port 3000.
+
+✅ Solution 1: Use Dynamic Ports in Dev:
+
+In development, use a different port (e.g., 3001) by setting an environment variable:
+
+export PORT=3001
+export BUILD_TARGET=dev
+docker-compose -f docker-compose.yaml -f docker-compose.override.yaml up --build
+
+Or using the script :./run-dev.sh
+
+#!/bin/bash
+echo "Running Dev Mode on port 3001 ..."
+docker-compose down
+export BUILD_TARGET=dev
+export PORT=3001
+docker-compose -f docker-compose.yaml -f docker-compose.override.yaml up --build
+
+In your docker-compose.yaml:
+
+services:
+  frontend:
+    ports:
+      - "${DEV_PORT:-3000}:3000"
+
+This maps host port 3001 to container port 3000 when DEV_PORT is set.
+
+2: ✅ Solution 2: Separate Dev and Prod Scripts
+Use separate scripts to handle different environments.
+
+run-dev.sh:
+
+#!/bin/bash
+echo "Running Dev Mode on port 3001 ..."
+export BUILD_TARGET=dev
+export DEV_PORT=3001
+docker-compose -f docker-compose.yaml -f docker-compose.override.yaml up --build
+
+run-prod.sh:
+
+#!/bin/bash
+
+echo "Running Prod Mode (nginx on port 3000 → 80) ..."
+
+# Stop and remove existing containers
+docker-compose -f docker-compose.yaml down
+
+# Set environment variable for production target
+export BUILD_TARGET=frontend-react
+
+# Start and build containers using just the main compose file
+docker-compose -f docker-compose.yaml up --build
+
+Jenkins Integration Tip:
+
+If you’re using Jenkins, you can invoke the script inside your pipeline:
+
+stage('Build & Run Containers') {
+  steps {
+    dir("${env.WORKSPACE}") {
+      sh 'chmod +x run-dev.sh'
+      sh './run-dev.sh'
+    }
+  }
+}
+
+###added run-prod.sh for CI-safe production build
+
+ Docker build fails with:
+
+ Could not find a required file.
+  Name: index.js
+  Searched in: /app/src
+
+Even though the file existed in your local project, the frontend/src/index.js was not available inside the Docker container.
+
+This typically happens due to:
+
+A: Incorrect volume mounts
+
+B: .dockerignore or .gitignore accidentally ignoring the src/ folder
+
+C: Jenkins workspace not having the correct files
+
+D: Git repo not committing the frontend/src/index.js (especially if it was untracked locally)
+
+Likely Culprit: Volume Override in Dev Mode
+
+Your docker-compose.override.yaml contains:
+
+volumes:
+  - ./frontend/src:/app/src
+  - /app/node_modules
+
+This binds your local ./frontend/src over the container's /app/src.
+
+So if the host volume is empty or mismatched, it overwrites what was built during COPY . . in the Dockerfile — removing index.js inside the container.
+
+Solution: Remove the volumes block during Jenkins/dev build
+
+Volumes like:
+
+volumes:
+  - ./frontend/src:/app/src
+  - /app/node_modules
+
+Should be used only during local dev, not CI.
+
+So instead of run-dev.sh, run-prod.sh file:
+
+#!/bin/bash
+
+echo "Running Prod Mode (nginx on port 3000 → 80) ..."
+
+# Stop and remove existing containers
+docker-compose -f docker-compose.yaml down
+
+# Set environment variable for production target
+export BUILD_TARGET=frontend-react
+
+# Start and build containers using just the main compose file
+docker-compose -f docker-compose.yaml up --build
+
+And Jenkinsfile Integration:
+
+Use one or the other:
+
+stage('Build & Run Containers') {
+  steps {
+    dir("${env.WORKSPACE}") {
+      sh 'chmod +x run-prod.sh'
+      sh './run-prod.sh'
+    }
+  }
+}
+
+1: For local development, keep using run-dev.sh.
+2: In Jenkins/CI, always prefer run-prod.sh.
+
