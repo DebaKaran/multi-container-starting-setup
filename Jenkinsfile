@@ -11,6 +11,15 @@ pipeline {
       }
     }
 
+     stage('Verify Frontend Code') {
+      steps {
+        dir("${env.WORKSPACE}") {
+          echo 'Verifying frontend/src contents...'
+          sh 'ls -la frontend/src'
+          sh 'cat frontend/src/index.js'
+        }
+      }
+    }
     stage('Build & Run Containers') {
       steps {
         dir("${env.WORKSPACE}") {
