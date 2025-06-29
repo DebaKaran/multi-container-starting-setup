@@ -3,9 +3,6 @@ pipeline {
     label 'myagents'  // Make sure this matches your agent label in Jenkins
   }
 
-  environment {
-    COMPOSE_CMD = "docker-compose -f docker-compose.yaml -f docker-compose.override.yaml"
-  }
 
   stages {
     stage('Checkout') {
@@ -17,10 +14,8 @@ pipeline {
     stage('Build & Run Containers') {
       steps {
         dir("${env.WORKSPACE}") {
-          sh "pwd && ls -la"
-          sh "ls -la ./frontend"
-          sh "ls -la ./backend"
-          sh "${COMPOSE_CMD} up -d --build"
+         sh 'chmod +x run-dev.sh'
+         sh './run-dev.sh'
         }
       }
     }
