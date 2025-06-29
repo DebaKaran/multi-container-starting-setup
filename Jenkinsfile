@@ -3,6 +3,9 @@ pipeline {
     label 'myagents'  // Make sure this matches your agent label in Jenkins
   }
 
+  environment {
+    NOTIFY_EMAILS = credentials('notify-emails')
+  }
 
   stages {
     stage('Checkout') {
@@ -23,8 +26,8 @@ pipeline {
     stage('Build & Run Containers') {
       steps {
         dir("${env.WORKSPACE}") {
-         sh 'chmod +x run-prod.sh'
-         sh './run-prod.sh'
+         sh 'chmod +x run-dev.sh'
+         sh './run-dev.sh'
         }
       }
     }
@@ -42,7 +45,9 @@ pipeline {
   post {
     failure {
       echo 'Pipeline failed! Sending alert...'
-      // Add email/slack/etc. notifications here
+      mail to: "${env.NOTIFY_EMAILS}",
+           subject: "Build Failed: ${env.JOB_NAME} [#${env.BUILD_NUMBER}]",
+           body: "View details here: ${env.BUILD_URL}"
     }
     success {
       echo 'Deployment successful!'
