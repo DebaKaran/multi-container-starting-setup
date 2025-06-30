@@ -45,7 +45,7 @@ pipeline {
   post {
     failure {
       echo 'Pipeline failed! Sending alert...'
-      mail to: "${env.NOTIFY_EMAILS}",
+      mail to: env.NOTIFY_EMAILS,
            subject: "Build Failed: ${env.JOB_NAME} [#${env.BUILD_NUMBER}]",
            body: "View details here: ${env.BUILD_URL}"
     }
