@@ -688,17 +688,18 @@ Secret: your email address (e.g., your.email@example.com)
 3: Your Jenkinsfile should use the credential securely:
 
 environment {
-  NOTIFY_EMAILS = credentials('notify-emails')
+NOTIFY_EMAILS = credentials('notify-emails')
 }
 
 post {
-  failure {
-    echo 'Pipeline failed! Sending alert...'
-    mail to: env.NOTIFY_EMAILS, // ✅ Secure way — no Groovy interpolation
-         subject: "Build Failed: ${env.JOB_NAME} [#${env.BUILD_NUMBER}]",
-         body: "View details here: ${env.BUILD_URL}"
-  }
+failure {
+echo 'Pipeline failed! Sending alert...'
+mail to: env.NOTIFY_EMAILS, // ✅ Secure way — no Groovy interpolation
+subject: "Build Failed: ${env.JOB_NAME} [#${env.BUILD_NUMBER}]",
+body: "View details here: ${env.BUILD_URL}"
+}
 }
 
-
 Security Tip: Avoid "${env.SECRET}" when referencing credentials. Use env.SECRET directly to prevent leakage in logs or stack traces.
+
+### Removable Comments
