@@ -726,3 +726,51 @@ When running the pipeline:
 - `Jenkinsfile`: Defines `parameters { string(name: 'IMAGE_TAG' ...) }`
 - `prod-run.sh`: Uses `${IMAGE_TAG}` with fallback and passes it to Docker Compose
 - `docker-compose.yaml`: Tags `backend` and `frontend` images using `${IMAGE_TAG}`
+
+# Jenkins Pipeline with Dynamic Docker Image Tagging
+
+This project demonstrates an automated Jenkins pipeline that builds and runs multi-container applications using Docker and `docker-compose`.
+
+## Features
+
+- GitHub webhook integration for auto-triggered Jenkins builds
+- Dynamic Docker image tagging:
+  - Uses `main-<BUILD_NUMBER>` when no tag is manually provided
+  - Allows optional custom tags during manual Jenkins builds
+- Executes a production-ready build script (`prod-run.sh`)
+- Email notification on build failure using Jenkins credentials
+- Builds and runs services defined in `docker-compose.yaml`
+
+## Jenkinsfile Highlights
+
+- Accepts an optional `IMAGE_TAG` parameter
+- Defaults to `main-<BUILD_NUMBER>` if left as `'latest'`
+- Runs `prod-run.sh` with the resolved tag
+- Sends failure alert email using a preconfigured `notify-emails` credential
+
+## prod-run.sh
+
+This script:
+
+- Shuts down any running containers
+- Uses the passed `IMAGE_TAG` (or `latest` as fallback)
+- Builds the containers with the given tag
+- Starts the services in detached mode using `docker-compose`
+
+## docker-compose.yaml
+
+No changes needed in `docker-compose.yaml` — ensure your services (like `frontend`, `backend`) are tagged using `${IMAGE_TAG}` if image tagging is required.
+
+---
+
+## Example Manual Build
+
+1. In Jenkins, click **Build with Parameters**
+2. Provide an `IMAGE_TAG` (e.g., `release-1.0.0`) or leave as `'latest'` to auto-generate
+3. Jenkins runs the pipeline, tags images accordingly, and runs the app using Docker Compose
+
+---
+
+## Email Notification
+
+If a build fails, Jenkins sends an alert to the configured email address stored in `notify-emails` Jenkins credentials.
