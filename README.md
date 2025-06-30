@@ -658,3 +658,13 @@ sh './run-prod.sh'
 2: In Jenkins/CI, always prefer run-prod.sh.
 
 ### Email Testing
+
+### Making changes for intentionally causing the Jenkins pipeline to fail
+
+Modify a step to deliberately fail. For example, in the Verify Frontend Code stage, change:
+
+sh 'cat frontend/src/index.js'
+
+to
+
+sh 'cat frontend/src/this_file_does_not_exist.js'
