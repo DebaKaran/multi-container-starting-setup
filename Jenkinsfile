@@ -28,6 +28,30 @@ pipeline {
         }
       }
     }
+
+    stage('Parallel Build') {
+  parallel {
+    stage('Frontend Build') {
+      agent { label 'myagents' }
+      steps {
+        dir("${env.WORKSPACE}/frontend") {
+          sh 'npm install'
+          sh 'npm run build'
+        }
+      }
+    }
+    stage('Backend Build') {
+      agent { label 'myagents' }
+      steps {
+        dir("${env.WORKSPACE}/backend") {
+          sh 'npm install'
+          sh 'npm run lint || true'
+        }
+      }
+    }
+  }
+}
+
     stage('Build & Run Containers') {
       steps {
         dir("${env.WORKSPACE}") {

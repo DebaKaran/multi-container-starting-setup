@@ -774,3 +774,28 @@ No changes needed in `docker-compose.yaml` — ensure your services (like `front
 ## Email Notification
 
 If a build fails, Jenkins sends an alert to the configured email address stored in `notify-emails` Jenkins credentials.
+
+### Jenkins Pipeline Enhancements
+
+This project uses a Jenkins pipeline defined in `Jenkinsfile` to automate the build and deployment process.
+
+#### Parallel Build Stage Added
+
+The pipeline now includes a `Parallel Build` stage which builds the frontend and backend simultaneously to speed up CI execution.
+
+```groovy
+stage('Parallel Build') {
+  parallel {
+    stage('Frontend Build') {
+      ...
+    }
+    stage('Backend Build') {
+      ...
+    }
+  }
+}
+
+A: The frontend service runs npm install and npm run build
+
+B: The backend service runs npm install and npm run lint || true
+
