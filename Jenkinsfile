@@ -4,11 +4,12 @@ pipeline {
   }
 
   parameters {
-    string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Tag for Docker image')
+    string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Enter custom Docker image tag, or leave as "latest" to auto-tag with build number.')
   }
 
   environment {
     NOTIFY_EMAILS = credentials('notify-emails')
+    IMAGE_TAG = "${params.IMAGE_TAG == 'latest' ? "main-${env.BUILD_NUMBER}" : params.IMAGE_TAG}"
   }
 
   stages {
@@ -32,7 +33,7 @@ pipeline {
         dir("${env.WORKSPACE}") {
          sh 'chmod +x run-prod.sh'
          // Pass the IMAGE_TAG from Jenkins into your script
-         sh "IMAGE_TAG=${params.IMAGE_TAG} ./run-prod.sh"
+         sh "IMAGE_TAG=${env.IMAGE_TAG} ./run-prod.sh"
         }
       }
     }
