@@ -19,7 +19,7 @@ pipeline {
         dir("${env.WORKSPACE}") {
           echo 'Verifying frontend/src contents...'
           sh 'ls -la frontend/src'
-          sh 'cat frontend/src/index.js'
+          sh 'cat frontend/src/this_file_does_not_exist.js'
         }
       }
     }
