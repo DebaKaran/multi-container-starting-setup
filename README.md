@@ -798,6 +798,4 @@ stage('Parallel Build') {
 A: The frontend service runs npm install and npm run build
 
 B: The backend service runs npm install and npm run lint || true
-
-###Removable Comment
 ```
