@@ -702,4 +702,27 @@ body: "View details here: ${env.BUILD_URL}"
 
 Security Tip: Avoid "${env.SECRET}" when referencing credentials. Use env.SECRET directly to prevent leakage in logs or stack traces.
 
-### Removable Comments
+## Jenkins Pipeline Parameters
+
+This project supports dynamic Docker image tagging using Jenkins parameters.
+
+### `IMAGE_TAG` Parameter
+
+The Jenkins pipeline accepts a string parameter named `IMAGE_TAG` (default: `latest`). This value is passed into the pipeline and used to:
+
+- Tag backend and frontend Docker images (e.g., `goals-backend:build-43`)
+- Control behavior in the `prod-run.sh` deployment script
+- Enable consistent tagging for image versioning and traceability
+
+### Example Jenkins Usage
+
+When running the pipeline:
+
+- If prompted for `IMAGE_TAG`, enter a value like `v1.0.0` or `build-42`
+- If left blank, it will default to `latest`
+
+### Affected Files
+
+- `Jenkinsfile`: Defines `parameters { string(name: 'IMAGE_TAG' ...) }`
+- `prod-run.sh`: Uses `${IMAGE_TAG}` with fallback and passes it to Docker Compose
+- `docker-compose.yaml`: Tags `backend` and `frontend` images using `${IMAGE_TAG}`

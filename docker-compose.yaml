@@ -11,10 +11,12 @@ services:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
   backend:
     container_name: goals-backend
-    # build: ./backend
     build:
       context: ./backend
       dockerfile: Dockerfile
+      args:
+        IMAGE_TAG: ${IMAGE_TAG}
+    image: goals-backend:${IMAGE_TAG}
     ports:
       - 8070:8070
     volumes:
@@ -30,6 +32,9 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        IMAGE_TAG: ${IMAGE_TAG}
+    image: goals-frontend:${IMAGE_TAG}
     ports:
       - 3000:80
     depends_on:
